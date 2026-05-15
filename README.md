@@ -20,6 +20,17 @@ This MCP server provides one tool that can be used by LLMs to interact with Clau
 - Access file editing capabilities directly
 - Enable specific tools by default
 
+## Permissions and Alternatives
+
+This server is a thin MCP wrapper around the local Claude Code CLI. It always starts Claude Code with `--dangerously-skip-permissions`, but it cannot approve prompts that belong to a parent MCP client, bypass macOS privacy prompts, or make another Claude Code session inherit its settings. If the calling client stalls while waiting for permission checks, fix the caller's MCP permissions or run Claude Code directly instead.
+
+Current alternatives:
+- Use Claude Code directly for work that needs its native permission UI: `claude`, `claude -p`, or `claude --permission-mode bypassPermissions`.
+- Use Claude Code's native MCP server when another MCP client should access Claude Code tools: `claude mcp serve`.
+- For Claude Code as the caller, configure tool permissions with `--allowedTools`, `--disallowedTools`, project/user settings, or `--permission-prompt-tool`.
+
+Use this package when you specifically want one MCP tool that delegates a prompt to a separate Claude Code process. Prefer native Claude Code MCP/permission configuration when permission ownership needs to stay with the active Claude Code session.
+
 ## Benefits
 
 - Cursor/Windsurf often have trouble editing files. Claude Code is better and faster at it.
@@ -33,7 +44,7 @@ This MCP server provides one tool that can be used by LLMs to interact with Clau
 ## Prerequisites
 
 - Node.js v20 or later (Use fnm or nvm to install)
-- Claude CLI installed locally (run it and call /doctor) and `-dangerously-skip-permissions` accepted.
+- Claude CLI installed locally (run it and call /doctor) and `--dangerously-skip-permissions` accepted.
 
 ## Configuration
 
@@ -230,7 +241,7 @@ This example illustrates `claude_code` handling a more complex, multi-step task,
 
 - **"Command not found" (claude-code-mcp):** If installed globally, ensure the npm global bin directory is in your system's PATH. If using `npx`, ensure `npx` itself is working.
 - **"Command not found" (claude or ~/.claude/local/claude):** Ensure the Claude CLI is installed correctly. Run `claude/doctor` or check its documentation.
-- **Permissions Issues:** Make sure you've run the "Important First-Time Setup" step.
+- **Permissions Issues:** Make sure you've run the "Important First-Time Setup" step. If the parent MCP client is waiting on its own approval flow, configure that client's MCP permissions or use Claude Code's native `claude mcp serve` path; this server can only pass flags to the child Claude Code process it starts.
 - **JSON Errors from Server:** If `MCP_CLAUDE_DEBUG` is `true`, error messages or logs might interfere with MCP's JSON parsing. Set to `false` for normal operation.
 - **ESM/Import Errors:** Ensure you are using Node.js v20 or later.
 

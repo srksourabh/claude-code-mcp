@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added optional `sessionId`, `messages`, and `stateless` arguments so MCP clients can resume Claude Code sessions while preserving legacy one-shot calls by default. Thanks @marcusquinn.
 - Increased the default Claude CLI execution timeout to 60 minutes and added `CLAUDE_CLI_TIMEOUT_SECONDS` for local overrides.
+- Documented the permission boundary of this MCP wrapper and current native Claude Code alternatives for permission-sensitive workflows.
 
 ## [1.10.12] - 2025-05-17
 
